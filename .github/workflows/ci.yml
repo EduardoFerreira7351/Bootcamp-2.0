@@ -9,6 +9,7 @@ on:
 jobs:
   test-build:
     runs-on: ubuntu-latest
+    working-directory: 'Bootcamp Project'
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
