@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "mkdir -p dist && cp -r src/* dist/",
+    "build": "mkdir -p dist && cp -r popup content assets manifest.json dist/",
     "test:e2e": "playwright test --reporter=list,html",
     "test": "npm run build && npm run test:e2e"
   },
