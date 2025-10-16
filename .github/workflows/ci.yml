@@ -24,6 +24,10 @@ jobs:
       - name: Instalar navegadores do Playwright
         run: npx playwright install --with-deps chromium
 
+        # NOVO PASSO DE DEBUG
+      - name: Listar arquivos no diretório
+        run: ls -la 
+
       - name: Buildar a extensão
         run: npm run build
 
