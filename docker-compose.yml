@@ -2,5 +2,5 @@ services:
   e2e:
     build: .
     command: npm test
-    # Aumenta a memória compartilhada para evitar que o Chromium falhe
+    
     shm_size: '2gb'
