@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "mkdir -p dist && cp -r docs/icons docs/js docs/pages docs/manifest.json dist/",
+    "build": "mkdir -p dist && cp -r docs/icons docs/Js docs/pages docs/manifest.json dist/",
     "test:e2e": "playwright test --reporter=list,html",
     "test": "npm run build && npm run test:e2e"
   },
