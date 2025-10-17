@@ -21,10 +21,13 @@
   "background": {
   "service_worker": "Js/background.js"
 },
+  "host_permissions": [
+    "*://*.google.com/*"
+  ],
   "content_scripts": [
-  {
-    "matches": ["https://example.com/"],
-    "js": ["Js/content.js"]
-  }
-]
+    {
+      "matches": ["*://*.google.com/search*"],
+      "js": ["Js/content.js"]
+    }
+  ]
 }

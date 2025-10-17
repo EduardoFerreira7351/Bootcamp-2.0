@@ -3,12 +3,10 @@ import path from 'node:path';
 
 const distPath = path.resolve(__dirname, '..', 'dist');
 
-test('A extensão deve injetar o content script na página correta', async ({}, testInfo) => {
-  // Mantemos o timeout generoso por segurança
-  testInfo.setTimeout(120000);
+test('A extensão deve injetar o content script na página de resultados do Google', async ({}, testInfo) => {
+  testInfo.setTimeout(120000); // Mantemos um timeout generoso
 
-  // --- PASSO 1: LANÇAR O NAVEGADOR COM A EXTENSÃO ---
-  // Esta é a parte crucial que estava faltando.
+  // 1. Lançamos um navegador com a extensão carregada.
   const context = await chromium.launchPersistentContext('', {
     headless: true,
     args: [
@@ -18,16 +16,17 @@ test('A extensão deve injetar o content script na página correta', async ({}, 
   });
   const page = await context.newPage();
 
-  // --- PASSO 2: EXECUTAR O TESTE ---
-  // Agora, neste navegador que TEM a extensão, vamos para a página.
-  await page.goto('https://example.com/');
+  // 2. Navega para uma página de resultados de pesquisa do Google.
+  // A URL precisa conter "/search" para ativar o content script.
+  await page.goto('https://www.google.com/search?q=Playwright');
 
-  // Procura pelo elemento que o content script deveria ter criado
+  // 3. Procura pelo elemento que o content script deveria ter criado.
+  // Garanta que seu content.js cria este elemento!
   const marker = page.locator('#bootcamp-extension-test-marker');
 
-  // Verifica se o elemento está visível
+  // 4. Verifica se o elemento está visível
   await expect(marker).toBeVisible({ timeout: 15000 });
 
-  // Fecha o navegador
+  // 5. Fecha o navegador
   await context.close();
 });
