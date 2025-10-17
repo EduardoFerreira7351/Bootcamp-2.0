@@ -19,7 +19,7 @@ test('Exemplo de teste: popup da extensão deve ter um título', async () => {
   const extensionId = await page.evaluate(async () => {
       // Este código roda no navegador para encontrar o ID da extensão
       const extensions = await (globalThis as any).chrome.management.getAll();
-      const myExtension = extensions.find((ext: { name: string; }) => ext.name === 'Minha Extensão de Exemplo'); // <-- MUDE AQUI
+      const myExtension = extensions.find((ext: { name: string; }) => ext.name === 'Bootcamp Helper'); // <-- MUDE AQUI
       return myExtension.id;
   });
 
@@ -29,7 +29,7 @@ test('Exemplo de teste: popup da extensão deve ter um título', async () => {
 
   // Agora você pode testar o conteúdo do popup
   const pageTitle = await popupPage.title();
-  expect(pageTitle).toBe('Título do Popup'); // <-- MUDE AQUI para o título real do seu popup.html
+  expect(pageTitle).toBe('Bootcamp Helper'); // <-- MUDE AQUI para o título real do seu popup.html
 
   // Exemplo: verificar se um elemento existe
   // const locator = popupPage.locator('#meu-botao');
