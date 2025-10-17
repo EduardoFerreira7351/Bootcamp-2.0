@@ -17,11 +17,20 @@ test('A extensão deve injetar o content script na página de resultados do Goog
   const page = await context.newPage();
 
   // 2. Navega para uma página de resultados de pesquisa do Google.
-  // A URL precisa conter "/search" para ativar o content script.
   await page.goto('https://www.google.com/search?q=Playwright');
 
+  // --- A JOGADA FINAL: DERROTANDO O POP-UP DE COOKIES ---
+  // Procuramos pelo botão "Rejeitar tudo" e clicamos nele se ele aparecer.
+  // O 'catch' garante que o teste continue mesmo se o pop-up não aparecer.
+  try {
+    const rejectButton = page.locator('#W0wltc'); // Este é o ID do botão "Rejeitar tudo"
+    await rejectButton.click({ timeout: 5000 }); // Damos 5s para ele aparecer
+  } catch (error) {
+    // Se o botão não for encontrado, ótimo! A página está limpa.
+    console.log('Pop-up de consentimento não encontrado, prosseguindo...');
+  }
+  
   // 3. Procura pelo elemento que o content script deveria ter criado.
-  // Garanta que seu content.js cria este elemento!
   const marker = page.locator('#bootcamp-extension-test-marker');
 
   // 4. Verifica se o elemento está visível
