@@ -14,11 +14,14 @@ test('popup da extensão deve carregar e ter o título correto', async ({}, test
     ],
   });
 
-  // --- ESTRATÉGIA FINAL - VERSÃO CORRIGIDA ---
+  // --- A JOGADA FINAL: O "EMPURRÃO" ---
+  // Abrimos uma nova página em branco. Este ato força o navegador
+  // a inicializar completamente todos os componentes carregados, incluindo nossa extensão.
+  await context.newPage();
+
+  // Agora que a extensão foi "acordada", nossa lógica de busca vai funcionar.
   let extensionId = null;
   for (let i = 0; i < 20; i++) {
-    
-    // Primeiro, procuramos nos Service Workers
     for (const worker of context.serviceWorkers()) {
       if (worker.url().startsWith('chrome-extension://')) {
         extensionId = worker.url().split('/')[2];
@@ -27,7 +30,6 @@ test('popup da extensão deve carregar e ter o título correto', async ({}, test
     }
     if (extensionId) break;
 
-    // Se não achou, procuramos em todas as páginas abertas
     for (const page of context.pages()) {
       if (page.url().startsWith('chrome-extension://')) {
         extensionId = page.url().split('/')[2];
@@ -35,16 +37,14 @@ test('popup da extensão deve carregar e ter o título correto', async ({}, test
       }
     }
     if (extensionId) break;
-
-    // --- CORREÇÃO FINAL ---
-    // Usamos uma pausa padrão do JavaScript que não gera erro no linter
     await new Promise(resolve => setTimeout(resolve, 500));
   }
 
   if (!extensionId) {
-    throw new Error("ERRO FINAL: Não foi possível encontrar NENHUM componente da extensão carregado após 10 segundos.");
+    throw new Error("ERRO FINAL: A extensão não inicializou mesmo após o estímulo.");
   }
 
+  // Com o ID finalmente em mãos, o resto do teste é rápido
   const popupPage = await context.newPage();
   await popupPage.goto(`chrome-extension://${extensionId}/pages/popup/popup.html`);
 
