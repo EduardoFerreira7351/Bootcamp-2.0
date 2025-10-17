@@ -19,12 +19,12 @@
     "activeTab"
   ],
   "background": {
-    "service_worker": "js/background.js"
-  },
+  "service_worker": "Js/background.js"
+},
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["js/content.js"]
+      "js": ["Js/content.js"]
     }
   ]
 }
