@@ -22,9 +22,9 @@
   "service_worker": "Js/background.js"
 },
   "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["Js/content.js"]
-    }
-  ]
+  {
+    "matches": ["https://example.com/"],
+    "js": ["Js/content.js"]
+  }
+]
 }

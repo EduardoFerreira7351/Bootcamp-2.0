@@ -1,13 +1,4 @@
-console.log("Content Script injetado na página.");
-
-
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    
-    if (request.action === "mudarCorDeFundo") {
-      document.body.style.backgroundColor = "lightyellow";
-      
-      sendResponse({ status: "Cor alterada com sucesso!" });
-    }
-  }
-);
+// Este script vai rodar em example.com
+const testElement = document.createElement('div');
+testElement.id = 'bootcamp-extension-test-marker';
+document.body.appendChild(testElement);
