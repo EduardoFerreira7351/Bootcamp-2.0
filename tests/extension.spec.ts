@@ -16,25 +16,29 @@ test('A extensão deve injetar o content script na página de resultados do Goog
   });
   const page = await context.newPage();
 
-  // 2. Navega para uma página de resultados de pesquisa do Google.
+  // 2. Navega para a página de resultados de pesquisa do Google.
   await page.goto('https://www.google.com/search?q=Playwright');
 
-  // --- A JOGADA FINAL: DERROTANDO O POP-UP DE COOKIES ---
-  // Procuramos pelo botão "Rejeitar tudo" e clicamos nele se ele aparecer.
-  // O 'catch' garante que o teste continue mesmo se o pop-up não aparecer.
+  // --- PASSO DE INTELIGÊNCIA #1: LIDAR COM O POP-UP DE FORMA ROBUSTA ---
+  // Procuramos pelo botão de consentimento pelo TEXTO, que é mais confiável.
   try {
-    const rejectButton = page.locator('#W0wltc'); // Este é o ID do botão "Rejeitar tudo"
-    await rejectButton.click({ timeout: 5000 }); // Damos 5s para ele aparecer
+    // Procura por um botão que contenha "Rejeitar tudo" ou "Reject all" (ignora maiúsculas/minúsculas)
+    await page.getByRole('button', { name: /Rejeitar tudo|Reject all/i }).click({ timeout: 5000 });
   } catch (error) {
-    // Se o botão não for encontrado, ótimo! A página está limpa.
-    console.log('Pop-up de consentimento não encontrado, prosseguindo...');
+    console.log('Pop-up de consentimento não encontrado ou já tratado, prosseguindo...');
   }
   
-  // 3. Procura pelo elemento que o content script deveria ter criado.
+  // --- PASSO DE INTELIGÊNCIA #2: ESPERAR A PÁGINA REAL CARREGAR ---
+  // Antes de procurar nosso <div>, vamos esperar por um elemento que SÓ existe
+  // na página de resultados: a barra de pesquisa no topo.
+  const searchBar = page.locator('textarea[name="q"]');
+  await expect(searchBar).toBeVisible({ timeout: 10000 });
+
+  // 3. AGORA SIM: Com a página pronta, procuramos pelo nosso elemento.
   const marker = page.locator('#bootcamp-extension-test-marker');
 
   // 4. Verifica se o elemento está visível
-  await expect(marker).toBeVisible({ timeout: 15000 });
+  await expect(marker).toBeVisible({ timeout: 10000 });
 
   // 5. Fecha o navegador
   await context.close();
